@@ -1,0 +1,4 @@
+targetInstance: ${TEST_URL:http://localhost:8094}
+ccdGatewayUrl: ${CCD_GW_URL:http://localhost:3453}
+
+

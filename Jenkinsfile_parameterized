@@ -1,0 +1,53 @@
+#!groovy
+@Library("Infrastructure") _
+
+properties([
+  parameters([
+    string(name: 'PRODUCT_NAME', defaultValue: 'ia', description: ''),
+    string(name: 'APP', defaultValue: 'case-access-api', description: 'Immigration & Asylum case API'),
+    string(name: 'TYPE', defaultValue: 'java', description: ''),
+    string(name: 'ENVIRONMENT', defaultValue: 'sandbox', description: 'Environment where code should be build and deployed'),
+    choice(name: 'SUBSCRIPTION', choices: 'sandbox\nnonprod\nprod', description: 'Azure subscriptions available to build in')
+  ]),
+  [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/ia-case-access-api.git'],
+  pipelineTriggers([[$class: 'GitHubPushTrigger']])
+])
+
+def secrets = [
+  'ia-${env}': [
+
+    secret('s2s-url', 'S2S_URL'),
+    secret('s2s-secret', 'IA_S2S_SECRET'),
+    secret('s2s-microservice', 'IA_S2S_MICROSERVICE'),
+
+    secret('launch-darkly-sdk-key', 'LAUNCH_DARKLY_SDK_KEY'),
+
+    secret('system-username', 'IA_SYSTEM_USERNAME'),
+    secret('system-password', 'IA_SYSTEM_PASSWORD')
+
+  ]
+]
+
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+  [$class     : 'AzureKeyVaultSecret',
+   secretType : 'Secret',
+   name       : secretName,
+   version    : '',
+   envVariable: envVar
+  ]
+}
+
+withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+
+  env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+
+  loadVaultSecrets(secrets)
+
+  after('functionalTest:preview') {
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+  }
+
+  after('functionalTest:aat') {
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+  }
+}
