@@ -1,13 +1,3 @@
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath("org.yaml:snakeyaml:1.23")
-    classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.11")
-  }
-}
-
 plugins {
   id 'application'
   id 'checkstyle'
@@ -19,16 +9,9 @@ plugins {
   id 'org.owasp.dependencycheck' version '6.0.2'
   id 'com.github.ben-manes.versions' version '0.28.0'
   id 'org.sonarqube' version '2.8'
-  id 'au.com.dius.pact' version '4.1.0'
+  id "io.freefair.lombok" version "5.1.0"
   id "info.solidsoft.pitest" version '1.5.1'
 }
-
-apply plugin: 'java'
-apply plugin: 'net.serenity-bdd.aggregator'
-apply plugin: 'project-report'
-
-mainClassName = 'uk.gov.hmcts.reform.iacaseaccessapi.Application'
-def jarName = 'ia-case-access-api.jar'
 
 group = 'uk.gov.hmcts.reform'
 version = '0.0.1'
@@ -65,19 +48,29 @@ sourceSets {
     }
     resources.srcDir file('src/smokeTest/resources')
   }
-
-  contractTest {
-    java {
-      compileClasspath += main.output
-      runtimeClasspath += main.output
-      srcDir file('src/contractTest/java')
-    }
-    resources.srcDir file('src/contactTest/resources')
-  }
 }
 
 tasks.withType(JavaCompile) {
   options.compilerArgs << "-Xlint:unchecked" << "-Werror"
+}
+
+task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
+  testClassesDirs = sourceSets.functionalTest.output.classesDirs
+  classpath = sourceSets.functionalTest.runtimeClasspath
+}
+
+task integration(type: Test, description: 'Runs the integration tests.', group: 'Verification') {
+  testClassesDirs = sourceSets.integrationTest.output.classesDirs
+  classpath = sourceSets.integrationTest.runtimeClasspath
+  useJUnitPlatform()
+  // set your environment variables here
+  // environment("APPINSIGHTS_INSTRUMENTATIONKEY", "test-key")
+}
+
+task smoke(type: Test) {
+  description = "Runs Smoke Tests"
+  testClassesDirs = sourceSets.smokeTest.output.classesDirs
+  classpath = sourceSets.smokeTest.runtimeClasspath
 }
 
 tasks.withType(Test) {
@@ -88,39 +81,11 @@ tasks.withType(Test) {
   }
 }
 
-task functional(type: Test) {
-  description = "Runs functional tests"
-  group = "Verification"
-  testClassesDirs = sourceSets.functionalTest.output.classesDirs
-  classpath = sourceSets.functionalTest.runtimeClasspath
-  finalizedBy aggregate
-}
-
-task integration(type: Test) {
-  description = "Runs integration tests"
-  group = "Verification"
-  testClassesDirs = sourceSets.integrationTest.output.classesDirs
-  classpath = sourceSets.integrationTest.runtimeClasspath
-  failFast = true
-}
-
-task smoke(type: Test) {
-  description = "Runs Smoke Tests"
-  testClassesDirs = sourceSets.smokeTest.output.classesDirs
-  classpath = sourceSets.smokeTest.runtimeClasspath
-}
-
-task contract(type: Test, description: 'Runs the pact contract tests.', group: 'Verification') {
-  description = "Runs the consumer Pact tests"
-  useJUnitPlatform()
-  testClassesDirs = sourceSets.contractTest.output.classesDirs
-  classpath = sourceSets.contractTest.runtimeClasspath
-}
-
 checkstyle {
   maxWarnings = 0
   toolVersion = '8.29'
-  getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
+  // need to set configDir to rootDir otherwise submodule will use submodule/config/checkstyle
+  configDir = new File(rootDir, 'config/checkstyle')
 }
 
 pmd {
@@ -128,16 +93,10 @@ pmd {
   ignoreFailures = true
   sourceSets = [sourceSets.main, sourceSets.test, sourceSets.functionalTest, sourceSets.integrationTest, sourceSets.smokeTest]
   reportsDir = file("$project.buildDir/reports/pmd")
-  // https://github.com/pmd/pmd/issues/876
-  ruleSets = []
-//  ruleSetFiles = files("config/pmd/ruleset.xml")
   ruleSets = [
-    'category/java/errorprone.xml',
-    'category/java/bestpractices.xml'
+      'category/java/errorprone.xml',
+      'category/java/bestpractices.xml'
   ]
-}
-jacoco {
-  toolVersion = "0.8.6"
 }
 
 jacocoTestReport {
@@ -151,11 +110,10 @@ jacocoTestReport {
 
 sonarqube {
   properties {
-    property "sonar.projectName", "IA :: Immigration & Asylum Case Access API"
+    property "sonar.projectName", "Reform :: ia-case-access-api"
     property "sonar.projectKey", "IACASEACCESSAPI"
     property "sonar.coverage.jacoco.xmlReportPaths", "${jacocoTestReport.reports.xml.destination.path}"
-    property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/iacaseaccessapi/infrastructure/config/**," +
-                                 "src/main/java/uk/gov/hmcts/reform/iacaseaccessapi/Application.java"
+    property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/iacaseaccessapi/infrastructure/config/**"
     property "sonar.pitest.mode", "reuseReport"
     property "sonar.pitest.reportsDirectory", "build/reports/pitest"
   }
@@ -164,12 +122,10 @@ sonarqube {
 project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
 
 pitest {
-  junit5PluginVersion = '0.12'
   targetClasses = ['uk.gov.hmcts.reform.iacaseaccessapi.*']
   excludedClasses = [
-    'uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.*',
-    'uk.gov.hmcts.reform.iacaseaccessapi.Application',
-    'uk.gov.hmcts.reform.iacaseaccessapi.CcdScenarioRunnerTest'
+      'uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.*',
+      'uk.gov.hmcts.reform.iacaseaccessapi.Application'
   ]
   threads = 10
   outputFormats = ['XML', 'HTML']
@@ -179,36 +135,37 @@ pitest {
 
 project.tasks['pitest'].group = "Verification"
 
-
-dependencyUpdates {
-  def isNonStable = { String version ->
-    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { qualifier -> version.toUpperCase().contains(qualifier) }
-    def regex = /^[0-9,.v-]+$/
-    return !stableKeyword && !(version ==~ regex)
-  }
-  rejectVersionIf { selection -> // <---- notice how the closure argument is named
-    return isNonStable(selection.candidate.version) && !isNonStable(selection.currentVersion)
+dependencyUpdates.resolutionStrategy {
+  componentSelection { rules ->
+    rules.all {
+      def isNonStable = { String version ->
+        ['alpha', 'beta', 'rc', 'cr', 'm', 'preview', 'b', 'ea'].any { qualifier ->
+          version ==~ /(?i).*[.-]\$qualifier[.\\d-+]*/
+        }
+      }
+      if (isNonStable(candidate.version) && !isNonStable(currentVersion)) {
+        selection.reject('Release candidate')
+      }
+    }
   }
 }
 
 dependencyCheck {
   suppressionFile = 'config/owasp/suppressions.xml'
-  analyzers {
-    // Disable scanning of .NET related binaries
-    assemblyEnabled = false
-  }
 }
 
 dependencyManagement {
   dependencies {
-    // CVE-2018-10237 - Unbounded memory allocation
-    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
-      entry 'guava'
-    }
+    // CVE-2019-17569, CVE-2020-1935, CVE-2020-1938
     dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.43') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
+    }
+
+    // CVE-2018-10237 - Unbounded memory allocation
+    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
+      entry 'guava'
     }
   }
 }
@@ -223,49 +180,40 @@ repositories {
 }
 
 def versions = [
-  junit           : '5.6.2',
-  junitPlatform   : '1.6.2',
-  reformLogging   : '5.1.1',
-  springBoot      : '2.3.9.RELEASE',
-  springfoxSwagger: '2.9.2',
-  pact_version    : '3.5.24',
-  serenity        : '2.2.12'
+    junit           : '5.6.2',
+    junitPlatform   : '1.6.2',
+    reformLogging   : '5.1.1',
+    springBoot      : '2.3.9.RELEASE',
+    springfoxSwagger: '2.9.2',
+    serenity        : '2.0.91'
 ]
 
 ext.libraries = [
-  junit5: [
-    "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
-    "org.junit.jupiter:junit-jupiter-engine:${versions.junit}",
-    "org.junit.jupiter:junit-jupiter-params:${versions.junit}",
-    "org.junit.platform:junit-platform-commons:${versions.junitPlatform}",
-    "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
-  ]
+    junit5: [
+        "org.junit.jupiter:junit-jupiter-api:${versions.junit}",
+        "org.junit.jupiter:junit-jupiter-engine:${versions.junit}",
+        "org.junit.jupiter:junit-jupiter-params:${versions.junit}",
+        "org.junit.platform:junit-platform-commons:${versions.junitPlatform}",
+        "org.junit.platform:junit-platform-engine:${versions.junitPlatform}"
+    ]
 ]
-
-configurations {
-  integrationTestCompile.extendsFrom testCompile
-  integrationTestRuntime.extendsFrom testRuntime
-  functionalTestCompile.extendsFrom testCompile
-  functionalTestRuntime.extendsFrom testRuntime
-  contractTestCompile.extendsFrom testCompile
-  contractTestRuntime.extendsFrom testRuntime
-}
 
 dependencies {
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: versions.springBoot
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: versions.springBoot
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server', version: versions.springBoot
+
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.2.RELEASE'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+
 
   // CVE-2019-17195
   implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '7.9'
 
-  implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.2'
   implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
   implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
@@ -273,17 +221,10 @@ dependencies {
   implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.2.RELEASE'
   implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
+  implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.2'
+  implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
 
-  compileOnly 'org.projectlombok:lombok:1.18.12'
-  annotationProcessor 'org.projectlombok:lombok:1.18.12'
-  testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
-  implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.1'
-  implementation group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.4'
-
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.2.RELEASE'
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-dependencies', version: 'Hoxton.SR4'
-  compile group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
@@ -293,20 +234,12 @@ dependencies {
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
 
-  testCompile "com.github.tomakehurst:wiremock:2.19.0"
-  testCompile group: 'org.mockito', name: 'mockito-core', version: '3.5.0'
-  testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.7'
-  testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot) {
-    exclude group: "com.vaadin.external.google", module: "android-json"
-  }
-  testCompile "ru.lanwen.wiremock:wiremock-junit5:1.3.1"
-
-
+  testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.3.3'
+  testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.23.2'
+  testImplementation group: 'ru.lanwen.wiremock', name: 'wiremock-junit5', version: '1.3.1'
   testImplementation group: 'org.springframework.security', name: 'spring-security-test'
-  testImplementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: '5.2.2'
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.12'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+  testImplementation group: 'org.awaitility', name: 'awaitility', version: '4.0.2'
 
   testImplementation group: 'org.pitest', name: 'pitest', version: '1.5.2'
 
@@ -315,63 +248,23 @@ dependencies {
   testImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
   testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
-  testCompile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.26.3'
-  testCompile group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.26.3'
-  testImplementation group: 'ru.lanwen.wiremock', name: 'wiremock-junit5', version: '1.3.1'
-  testImplementation group: 'org.springframework.security', name: 'spring-security-test'
+  integrationTestCompile sourceSets.main.runtimeClasspath
+  integrationTestCompile sourceSets.test.runtimeClasspath
 
-  //PACT testing
-  contractTestCompile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
-  contractTestCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-  contractTestCompile("org.assertj:assertj-core:3.16.1")
-  //pact contract testing
-  contractTestCompile group: 'au.com.dius', name: 'pact-jvm-consumer-junit5_2.12', version: versions.pact_version
-  contractTestCompile group: 'au.com.dius', name: 'pact-jvm-consumer-java8_2.12', version: versions.pact_version
-  contractTestCompile group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
+  functionalTestCompile sourceSets.main.runtimeClasspath
+  functionalTestCompile sourceSets.test.runtimeClasspath
 
-  integrationTestImplementation sourceSets.main.runtimeClasspath
-  integrationTestImplementation sourceSets.test.runtimeClasspath
-
-  functionalTestImplementation sourceSets.main.runtimeClasspath
-  functionalTestImplementation sourceSets.test.runtimeClasspath
-
-  smokeTestImplementation sourceSets.main.runtimeClasspath
-  smokeTestImplementation sourceSets.test.runtimeClasspath
-
-  contractTestCompile sourceSets.main.runtimeClasspath
-  contractTestCompile sourceSets.test.runtimeClasspath
-}
-
-
-
-project.ext {
-  pacticipant = 'ia_caseaccessApi'
-  pacticipantVersion = getCheckedOutGitCommitHash()
-}
-
-task runAndPublishConsumerPactTests(type: Test) {
-  logger.lifecycle("Runs pact Tests")
-  testClassesDirs = sourceSets.contractTest.output.classesDirs
-  classpath = sourceSets.contractTest.runtimeClasspath
+  smokeTestCompile sourceSets.main.runtimeClasspath
+  smokeTestCompile sourceSets.test.runtimeClasspath
 
 }
 
-runAndPublishConsumerPactTests.finalizedBy pactPublish
-
-pact {
-  broker {
-    pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
-  }
-  publish {
-    pactDirectory = "target/pacts"
-    tags = [System.getenv("PACT_BRANCH_NAME") ?: 'Dev']
-    version = project.pacticipantVersion
-  }
+test {
+  useJUnitPlatform()
+  failFast = true
 }
 
-def getCheckedOutGitCommitHash() {
-  'git rev-parse --verify --short HEAD'.execute().text.trim()
-}
+mainClassName = 'uk.gov.hmcts.reform.iacaseaccessapi.Application'
 
 bootJar {
   getArchiveFileName().set(provider {

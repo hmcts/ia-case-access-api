@@ -7,7 +7,6 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.FunctionalTest;
 
-
 public class WelcomeFunctionTest extends FunctionalTest {
 
     @Test
@@ -22,8 +21,7 @@ public class WelcomeFunctionTest extends FunctionalTest {
             .extract().response();
 
         assertThat(response.getStatusCode()).isEqualTo(200);
-        //assertThat(response.getBody().asString()).contains(expected);
+        assertThat(response.getBody().asString()).contains(expected);
     }
-
 
 }

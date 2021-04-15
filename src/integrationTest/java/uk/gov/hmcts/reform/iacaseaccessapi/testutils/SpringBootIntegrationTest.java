@@ -18,7 +18,10 @@ import uk.gov.hmcts.reform.iacaseaccessapi.Application;
 })
 @TestPropertySource(properties = {
     "CCD_URL=http://127.0.0.1:" + WIREMOCK_PORT + "/ccd",
-    "S2S_URL=http://127.0.0.1:" + WIREMOCK_PORT + "/s2s"
+    "IDAM_URL=http://127.0.0.1:" + WIREMOCK_PORT + "/idam",
+    "S2S_URL=http://127.0.0.1:" + WIREMOCK_PORT + "/s2s",
+    "IA_IDAM_CLIENT_ID=ia",
+    "IA_IDAM_SECRET=something"
 })
 @ExtendWith({
     WiremockResolver.class

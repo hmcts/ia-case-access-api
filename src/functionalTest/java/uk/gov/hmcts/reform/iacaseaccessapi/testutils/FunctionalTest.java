@@ -41,14 +41,13 @@ public class FunctionalTest {
     @Autowired
     protected ExtendedCcdApi ccdApi;
 
-
     protected IdamAuthProvider idamAuthProvider;
 
     protected ObjectMapper objectMapper = new ObjectMapper();
     protected final String targetInstance =
         StringUtils.defaultIfBlank(
             System.getenv("TEST_URL"),
-            "http://localhost:8098"
+            "http://localhost:8089"
         );
 
     protected RequestSpecification requestSpecification;
