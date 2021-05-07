@@ -2,7 +2,7 @@
 Service to access CCD case data for IAC case types
 
 ### Background
-There is a business need to do query CCD case data for a reconciliation purpose.
+There is a business need to query CCD case data for a reconciliation purpose.
 The reconciliation process is requested by Liberata where there is a need to provide additional information (surname) by IAC Team.
 There is a designed solution where IAC application will request case data querying CCD Elastic Search endpoint.
 Exposed IAC endpoint will be generic and easy to extend if additional information is needed in the future.

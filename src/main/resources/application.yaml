@@ -57,16 +57,17 @@ idam:
   baseUrl: ${IDAM_URL:http://127.0.0.1:5000}
   redirectUrl: ${IA_IDAM_REDIRECT_URI:http://localhost:3002/oauth2/callback}
   system:
-    username: ${IA_SYSTEM_USERNAME:}
-    password: ${IA_SYSTEM_PASSWORD:}
+    username: ${IA_SYSTEM_ACCESS_USERNAME:}
+    password: ${IA_SYSTEM_ACCESS_PASSWORD:}
     scope: "openid profile roles"
+    client-id: ${IA_IDAM_CLIENT_ID:ia}
+    client-secret: ${IA_IDAM_SECRET:something}
   s2s-auth:
     totp_secret: ${IA_S2S_SECRET:}
     microservice: ${IA_S2S_MICROSERVICE:ia}
     url: ${S2S_URL:http://127.0.0.1:4502}
   s2s-authorised:
     services: ${IA_S2S_AUTHORIZED_SERVICES:iac,payment_app}
-
 
 ccd:
   case-data-api:

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryDetails;
 import uk.gov.hmcts.reform.iacaseaccessapi.domain.entities.SupplementaryInfo;
+import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.idam.UserInfo;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.SupplementaryDetailsRequest;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers.model.SupplementaryDetailsResponse;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.service.CcdSupplementaryDetailsSearchService;
@@ -24,8 +26,17 @@ class SupplementaryDetailsResponseControllerTest {
     @Mock
     private CcdSupplementaryDetailsSearchService ccdSupplementaryDetailsSearchService;
 
+    private final String serviceAuthorization = "authorisation";
     private SupplementaryDetailsController supplementaryDetailsController;
     private ArrayList<String> ccdCaseNumberList = new ArrayList<String>();
+    private UserInfo userInfo = new UserInfo(
+        "ia-system-user@fake.hmcts.net",
+        "id",
+        newArrayList("caseworker-ia", "caseworker-ia-system-user"),
+        "System User",
+        "System",
+        "User"
+    );
 
     @BeforeEach
     public void setUp() {
@@ -50,13 +61,13 @@ class SupplementaryDetailsResponseControllerTest {
             supplementaryInfo.add(supplementaryInformation);
         });
 
-        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(ccdCaseNumberList)).thenReturn(
+        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(ccdCaseNumberList, serviceAuthorization)).thenReturn(
             supplementaryInfo);
 
         SupplementaryDetailsRequest supplementaryDetailsRequest = new SupplementaryDetailsRequest(ccdCaseNumberList);
 
         ResponseEntity<SupplementaryDetailsResponse> response
-            = supplementaryDetailsController.post(supplementaryDetailsRequest);
+            = supplementaryDetailsController.post(supplementaryDetailsRequest, serviceAuthorization);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(ccdCaseNumberList.size(), response.getBody().getSupplementaryInfo().size());
@@ -75,13 +86,13 @@ class SupplementaryDetailsResponseControllerTest {
         SupplementaryInfo supplementaryInformation = new SupplementaryInfo("11111111111111", supplementaryDetails);
         supplementaryInfo.add(supplementaryInformation);
 
-        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(ccdCaseNumberList)).thenReturn(
+        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(ccdCaseNumberList, serviceAuthorization)).thenReturn(
             supplementaryInfo);
 
         SupplementaryDetailsRequest supplementaryDetailsRequest = new SupplementaryDetailsRequest(ccdCaseNumberList);
 
         ResponseEntity<SupplementaryDetailsResponse> response
-            = supplementaryDetailsController.post(supplementaryDetailsRequest);
+            = supplementaryDetailsController.post(supplementaryDetailsRequest, serviceAuthorization);
 
         assertEquals(HttpStatus.PARTIAL_CONTENT, response.getStatusCode());
         assertEquals(1, response.getBody().getSupplementaryInfo().size());
@@ -97,13 +108,13 @@ class SupplementaryDetailsResponseControllerTest {
 
         List<SupplementaryInfo> supplementaryInfo = new ArrayList<>();
 
-        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(ccdCaseNumberList)).thenReturn(
+        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(ccdCaseNumberList, serviceAuthorization)).thenReturn(
             supplementaryInfo);
 
         SupplementaryDetailsRequest supplementaryDetailsRequest = new SupplementaryDetailsRequest(ccdCaseNumberList);
 
         ResponseEntity<SupplementaryDetailsResponse> response
-            = supplementaryDetailsController.post(supplementaryDetailsRequest);
+            = supplementaryDetailsController.post(supplementaryDetailsRequest, serviceAuthorization);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(0, response.getBody().getSupplementaryInfo().size());
@@ -112,12 +123,13 @@ class SupplementaryDetailsResponseControllerTest {
     @Test
     void should_return_forbidden_on_request() {
 
-        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(ccdCaseNumberList)).thenReturn(null);
+        when(ccdSupplementaryDetailsSearchService.getSupplementaryDetails(ccdCaseNumberList,
+                                                                          serviceAuthorization)).thenReturn(null);
 
         SupplementaryDetailsRequest supplementaryDetailsRequest = new SupplementaryDetailsRequest(ccdCaseNumberList);
 
         ResponseEntity<SupplementaryDetailsResponse> response
-            = supplementaryDetailsController.post(supplementaryDetailsRequest);
+            = supplementaryDetailsController.post(supplementaryDetailsRequest, serviceAuthorization);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
