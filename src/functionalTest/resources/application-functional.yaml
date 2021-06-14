@@ -1,3 +1,10 @@
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 20000
+        readTimeout: 20000
+
 targetInstance: ${TEST_URL:http://localhost:8089}
 
 ccdGatewayUrl: ${CCD_GW_URL:http://localhost:3453}
