@@ -2,8 +2,8 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 20000
-        readTimeout: 20000
+        connectTimeout: 60000
+        readTimeout: 60000
 
 targetInstance: ${TEST_URL:http://localhost:8089}
 
