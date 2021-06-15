@@ -40,42 +40,10 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
     }
 
     @Test
-    public void should_return_200_status_code_when_surname_retrieved_for_given_case_number() {
+    public void should_return_correct_status_codes_for_supplementary_details_request() {
 
-        ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
-        cases = caseListAsString(ccdCaseNumbers, ",");
-
-        Response response = supplementaryDetails(
-            cases,
-            caseDataFixture.getS2sToken()
-        );
-
-        assertThat(response.getStatusCode()).isEqualTo(200);
-
-        assertThatCaseIsInState(caseDataFixture.getCaseId(), "appealSubmitted");
-    }
-
-    @Test
-    public void should_return_206_status_code_when_partial_match_found_for_given_case_numbers() {
-
-        ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
-        ccdCaseNumbers.add("1234567890123457");
-        ccdCaseNumbers.add("1234567890123458");
-        cases = caseListAsString(ccdCaseNumbers, ",");
-
-        Response response = supplementaryDetails(
-            cases,
-            caseDataFixture.getS2sToken()
-        );
-
-        assertThat(response.getStatusCode()).isEqualTo(206);
-
-        assertThatCaseIsInState(caseDataFixture.getCaseId(), "appealSubmitted");
-    }
-
-    @Test
-    public void should_return_400_status_code_for_a_bad_request() {
-
+        // 400 status code for bad request
+        ccdCaseNumbers.clear();
         ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
         ccdCaseNumbers.add("1234567890123457");
         ccdCaseNumbers.add("1234567890123458");
@@ -85,59 +53,65 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
             cases,
             caseDataFixture.getS2sToken()
         );
-
         assertThat(response.getStatusCode()).isEqualTo(400);
 
-        assertThatCaseIsInState(caseDataFixture.getCaseId(), "appealSubmitted");
-    }
-
-    @Test
-    public void should_return_401_status_code_when_missing_s2s_token() {
-
+        // 401 status code for missing s2s token
+        ccdCaseNumbers.clear();
         ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
         cases = caseListAsString(ccdCaseNumbers, ",");
 
-        Response response = supplementaryDetails(
+        response = supplementaryDetails(
             cases,
             null
         );
-
         assertThat(response.getStatusCode()).isEqualTo(401);
 
-        assertThatCaseIsInState(caseDataFixture.getCaseId(), "appealSubmitted");
-    }
-
-    @Test
-    public void should_return_401_status_code_when_invalid_s2s_token() {
-
+        // 401 status code for invalid s2s token
+        ccdCaseNumbers.clear();
         ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
         cases = caseListAsString(ccdCaseNumbers, ",");
 
-        Response response = supplementaryDetails(
+        response = supplementaryDetails(
             cases,
             "eyJhbGciOiJIUzUxMi.invalid"
         );
-
         assertThat(response.getStatusCode()).isEqualTo(401);
 
-        assertThatCaseIsInState(caseDataFixture.getCaseId(), "appealSubmitted");
-    }
-
-    @Test
-    public void should_return_404_status_code_when_supplementary_details_not_found_for_given_case_numbers() {
-
+        // 404 status code when supplementary details not found for given case numbers
+        ccdCaseNumbers.clear();
         ccdCaseNumbers.add("1234567890123457");
         ccdCaseNumbers.add("1234567890123458");
         cases = caseListAsString(ccdCaseNumbers, ",");
 
-        Response response = supplementaryDetails(
+        response = supplementaryDetails(
             cases,
             caseDataFixture.getS2sToken()
         );
-
         assertThat(response.getStatusCode()).isEqualTo(404);
 
-        assertThatCaseIsInState(caseDataFixture.getCaseId(), "appealSubmitted");
+        // 200 status code when surname retrieved for given case number
+        ccdCaseNumbers.clear();
+        ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
+        cases = caseListAsString(ccdCaseNumbers, ",");
+
+        response = supplementaryDetails(
+            cases,
+            caseDataFixture.getS2sToken()
+        );
+        assertThat(response.getStatusCode()).isEqualTo(200);
+
+        // 206 status code for partial match found for given case numbers
+        ccdCaseNumbers.clear();
+        ccdCaseNumbers.add(String.valueOf(caseDataFixture.getCaseId()));
+        ccdCaseNumbers.add("1234567890123457");
+        ccdCaseNumbers.add("1234567890123458");
+        cases = caseListAsString(ccdCaseNumbers, ",");
+
+        response = supplementaryDetails(
+            cases,
+            caseDataFixture.getS2sToken()
+        );
+        assertThat(response.getStatusCode()).isEqualTo(206);
     }
 
     private void createCase() {
@@ -165,7 +139,7 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
 
         return given(requestSpecification)
             .when()
-            .header(new Header("Authorization", "anything"))
+            .header(new Header("Authorization", caseDataFixture.getLegalRepToken()))
             .header(new Header("ServiceAuthorization", serviceToken))
             .contentType("application/json")
             .body("{\"ccd_case_numbers\":["

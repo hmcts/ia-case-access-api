@@ -61,6 +61,10 @@ public class CaseDataFixture {
         return s2sToken;
     }
 
+    public String getLegalRepToken() {
+        return legalRepToken;
+    }
+
     public long getCaseId() {
         return caseId;
     }
