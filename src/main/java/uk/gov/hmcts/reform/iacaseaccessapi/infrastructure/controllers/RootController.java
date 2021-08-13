@@ -25,3 +25,4 @@ public class RootController {
         return ok("Welcome to IA Case Access Api");
     }
 }
+
