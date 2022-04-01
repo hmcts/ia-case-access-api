@@ -64,6 +64,7 @@ public class FunctionalTest {
 
     protected MapValueExpander mapValueExpander;
 
+
     @Before
     public void setup() throws IOException {
         requestSpecification = new RequestSpecBuilder()
