@@ -24,4 +24,5 @@ public class RootController {
     public ResponseEntity<String> welcome() {
         return ok("Welcome to IA Case Access Api");
     }
+
 }
