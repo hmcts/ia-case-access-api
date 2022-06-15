@@ -32,7 +32,7 @@ Functional tests use started application instance:
 ```
 
 ### Usage
-API details about usages and error statuses are placed in [Swagger UI](http://ia-case-access-api-aat.service.core-compute-aat.internal/swagger-ui.html)
+API details about usages and error statuses are placed in [ UI](http://ia-case-access-api-aat.service.core-compute-aat.internal/swagger-ui.html)
 
 
 ### Implementation

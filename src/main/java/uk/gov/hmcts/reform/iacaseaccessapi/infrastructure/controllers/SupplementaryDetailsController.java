@@ -2,7 +2,11 @@ package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 
 import static org.springframework.http.ResponseEntity.*;
 
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.*;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -28,42 +32,40 @@ public class SupplementaryDetailsController {
         this.supplementaryDetailsService = supplementaryDetailsService;
     }
 
-    @ApiOperation(
-        value = "Handles 'supplementary-details' calls from Pay Hub",
-        response = String.class,
-        authorizations =
+    @Operation(
+        summary = "Handles 'supplementary-details' calls from Pay Hub",
+        security =
             {
-                @Authorization(value = "ServiceAuthorization")
+                @SecurityRequirement(name = "ServiceAuthorization")
+            },
+        responses =
+            {
+                @ApiResponse(
+                    responseCode = "200",
+                    description = "Supplementary details completely retrieved.",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+                @ApiResponse(
+                    responseCode = "206",
+                    description = "Supplementary details partially retrieved.",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+                @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized - missing or invalid S2S token.",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+                @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden - system user does not have access to the resources.",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+                @ApiResponse(
+                    responseCode = "404",
+                    description = "Supplementary details not found for all the case numbers given.",
+                    content = @Content(schema = @Schema(implementation = String.class))),
+                @ApiResponse(
+                    responseCode = "500",
+                    description = "Unexpected or Run time exception.",
+                    content = @Content(schema = @Schema(implementation = String.class)))
             }
     )
-    @ApiResponses({
-        @ApiResponse(
-            code = 200,
-            message = "Supplementary details completely retrieved.",
-            response = String.class
-        ),
-        @ApiResponse(
-            code = 206,
-            message = "Supplementary details partially retrieved.",
-            response = String.class
-        ),
-        @ApiResponse(
-            code = 401,
-            message = "Unauthorized - missing or invalid S2S token."
-        ),
-        @ApiResponse(
-            code = 403,
-            message = "Forbidden - system user does not have access to the resources."
-        ),
-        @ApiResponse(
-            code = 404,
-            message = "Supplementary details not found for all the case numbers given."
-        ),
-        @ApiResponse(
-            code = 500,
-            message = "Unexpected or Run time exception."
-        )
-    })
     @PostMapping(path = "/supplementary-details")
     public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
 
