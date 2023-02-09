@@ -12,7 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
-import uk.gov.hmcts.reform.document.DocumentUploadClientApi;
+import uk.gov.hmcts.reform.ccd.document.am.config.CaseDocumentManagementClientAutoConfiguration;
+import uk.gov.hmcts.reform.ccd.document.am.feign.CaseDocumentClientApi;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.ServiceTokenGeneratorConfiguration;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.clients.ExtendedCcdApi;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.clients.ExtendedIdamApi;
@@ -23,7 +24,7 @@ import uk.gov.hmcts.reform.iacaseaccessapi.testutils.data.MapValueExpander;
 
 
 @SpringBootTest(classes = {
-    DocumentUploadClientApiConfiguration.class,
+    CaseDocumentManagementClientAutoConfiguration.class,
     ServiceTokenGeneratorConfiguration.class,
     FunctionalSpringContext.class
 })
@@ -44,13 +45,13 @@ public class FunctionalTest {
     protected IdamAuthProvider idamAuthProvider;
 
     @Autowired
+    protected CaseDocumentClientApi caseDocumentClientApi;
+
+    @Autowired
     protected ExtendedCcdApi ccdApi;
 
     @Autowired
     protected ExtendedIdamApi idamApi;
-
-    @Autowired
-    protected DocumentUploadClientApi documentUploadClientApi;
 
     protected ObjectMapper objectMapper = new ObjectMapper();
 
@@ -80,7 +81,7 @@ public class FunctionalTest {
         );
 
         DocumentManagementUploader documentManagementUploader = new DocumentManagementUploader(
-            documentUploadClientApi,
+            caseDocumentClientApi,
             idamAuthProvider,
             s2sAuthTokenGenerator
         );

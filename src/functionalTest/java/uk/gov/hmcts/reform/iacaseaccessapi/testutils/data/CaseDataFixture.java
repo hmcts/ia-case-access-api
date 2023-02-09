@@ -23,8 +23,8 @@ import uk.gov.hmcts.reform.iacaseaccessapi.testutils.clients.ExtendedCcdApi;
 
 public class CaseDataFixture {
 
-    private final String jurisdiction = "IA";
-    private final String caseType = "Asylum";
+    private static final String JURISDICTION = "IA";
+    private static final String CASE_TYPE = "Asylum";
 
     private final ObjectMapper objectMapper;
     private final ExtendedCcdApi ccdApi;
@@ -39,7 +39,6 @@ public class CaseDataFixture {
     private String legalRepUserId;
 
     private long caseId;
-    private Map<String, Object> caseData;
 
     public CaseDataFixture(
         ExtendedCcdApi ccdApi,
@@ -77,8 +76,8 @@ public class CaseDataFixture {
             legalRepToken,
             s2sToken,
             legalRepUserId,
-            jurisdiction,
-            caseType,
+            JURISDICTION,
+            CASE_TYPE,
             event
         );
 
@@ -86,7 +85,7 @@ public class CaseDataFixture {
         try {
             data = objectMapper.readValue(
                 asString(minimalAppealStarted),
-                new TypeReference<Map<String, Object>>() {
+                new TypeReference<>() {
                 }
             );
         } catch (Exception e) {
@@ -105,23 +104,22 @@ public class CaseDataFixture {
             legalRepToken,
             s2sToken,
             legalRepUserId,
-            jurisdiction,
-            caseType,
+            JURISDICTION,
+            CASE_TYPE,
             content
         );
 
         caseId = submit.getId();
-        caseData = submit.getCaseData();
     }
 
-    public String submitAppeal() {
+    public void submitAppeal() {
 
         Map<String, Object> noticeOfDecisionDoc = getDocumentToUpload();
 
         Map<String, Object> data = new HashMap<>();
         data.put("uploadTheNoticeOfDecisionDocs", newArrayList(noticeOfDecisionDoc));
 
-        return triggerEvent(
+        triggerEvent(
             legalRepToken,
             s2sToken,
             legalRepUserId,
@@ -138,14 +136,14 @@ public class CaseDataFixture {
         legalRepUserId = idamAuthProvider.getUserId(legalRepToken);
     }
 
-    private String triggerEvent(String userToken, String s2sToken, String userId, long caseId, String event, Map<String, Object> data) {
+    private void triggerEvent(String userToken, String s2sToken, String userId, long caseId, String event, Map<String, Object> data) {
 
         StartEventTrigger startEventResponse = ccdApi.startEvent(
             userToken,
             s2sToken,
             userId,
-            jurisdiction,
-            caseType,
+            JURISDICTION,
+            CASE_TYPE,
             String.valueOf(caseId),
             event
         );
@@ -159,17 +157,15 @@ public class CaseDataFixture {
             data
         );
 
-        CaseDetails submit = ccdApi.submitEvent(
+        ccdApi.submitEvent(
             userToken,
             s2sToken,
             userId,
-            jurisdiction,
-            caseType,
+            JURISDICTION,
+            CASE_TYPE,
             String.valueOf(caseId),
             content
         );
-
-        return submit.getState();
     }
 
     private String asString(Resource resource) {
@@ -186,6 +182,7 @@ public class CaseDataFixture {
         doc.put("document_url", "{$FIXTURE_DOC1_PDF_URL}");
         doc.put("document_binary_url", "{$FIXTURE_DOC1_PDF_URL_BINARY}");
         doc.put("document_filename", "{$FIXTURE_DOC1_PDF_FILENAME}");
+        doc.put("document_hash", "{$FIXTURE_DOC1_PDF_HASH}");
 
         Map<String, Object> document = new HashMap<>();
         document.put("document", doc);
