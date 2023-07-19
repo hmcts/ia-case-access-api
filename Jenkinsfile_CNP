@@ -43,9 +43,9 @@ withPipeline(type, product, component) {
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
     env.CCD_GW_URL = "http://dm-store-aat.service.core-compute-aat.internal"
 
-    loadVaultSecrets(secrets)
     enableAksStagingDeployment()
     disableLegacyDeployment()
+    loadVaultSecrets(secrets)
 
     afterSuccess('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
