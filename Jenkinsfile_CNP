@@ -13,6 +13,7 @@ def component = "case-access-api"
 
 def secrets = [
     'ia-${env}': [
+      secret('ia-config-validator-secret', 'IA_CONFIG_VALIDATOR_SECRET'),
         secret('s2s-secret', 'IA_S2S_SECRET'),
         secret('s2s-microservice', 'IA_S2S_MICROSERVICE'),
         secret('idam-client-id', 'IA_IDAM_CLIENT_ID'),
@@ -21,9 +22,7 @@ def secrets = [
         secret('ia-system-access-username', 'IA_SYSTEM_ACCESS_USERNAME'),
         secret('ia-system-access-password', 'IA_SYSTEM_ACCESS_PASSWORD'),
         secret('test-law-firm-a-username', 'TEST_LAW_FIRM_SHARE_CASE_A_USERNAME'),
-        secret('test-law-firm-a-password', 'TEST_LAW_FIRM_SHARE_CASE_A_PASSWORD'),
-
-        secret('ia-config-validator-secret', 'IA_CONFIG_VALIDATOR_SECRET')
+        secret('test-law-firm-a-password', 'TEST_LAW_FIRM_SHARE_CASE_A_PASSWORD')
     ]
 ]
 

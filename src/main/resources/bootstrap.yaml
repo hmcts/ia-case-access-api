@@ -4,6 +4,7 @@ spring:
       prefixed: false
       paths: /mnt/secrets/ia
       aliases:
+        ia-config-validator-secret: IA_CONFIG_VALIDATOR_SECRET
         ia-system-access-username: IA_SYSTEM_ACCESS_USERNAME
         ia-system-access-password: IA_SYSTEM_ACCESS_PASSWORD
         idam-client-id: IA_IDAM_CLIENT_ID
@@ -12,4 +13,3 @@ spring:
         s2s-secret: IA_S2S_SECRET
         s2s-microservice: IA_S2S_MICROSERVICE
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
-        ia-config-validator-secret: IA_CONFIG_VALIDATOR_SECRET
