@@ -28,6 +28,12 @@ public class ConfigValidatorAppListener implements ApplicationListener<ContextRe
     @Value("${idam.s2s-auth.totp_secret}")
     private String s2sSecret;
 
+    @Value("${idam.redirectUrl}")
+    private String idamRedirectUrl;
+
+    @Value("${idam.system.client-secret}")
+    private String idamClientSecret;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         breakOnMissingIaConfigValidatorSecret();
@@ -44,6 +50,8 @@ public class ConfigValidatorAppListener implements ApplicationListener<ContextRe
 
         log.info("ia.config.validator.secret = {}", iaConfigValidatorSecret);
         log.info("idam.s2s-auth.totp_secret = {}", s2sSecret);
+        log.info("idam.redirectUrl = {}", idamRedirectUrl);
+        log.info("idam.system.client-secret = {}", idamClientSecret);
 
         if (StringUtils.isBlank(iaConfigValidatorSecret)) {
             throw new IllegalArgumentException("ia.config.validator.secret is null or empty."
