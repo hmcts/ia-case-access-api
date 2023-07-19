@@ -25,6 +25,9 @@ public class ConfigValidatorAppListener implements ApplicationListener<ContextRe
     @Value("${ia.config.validator.secret}")
     private String iaConfigValidatorSecret;
 
+    @Value("${idam.s2s-auth.totp_secret}")
+    private String s2sSecret;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         breakOnMissingIaConfigValidatorSecret();
@@ -38,6 +41,9 @@ public class ConfigValidatorAppListener implements ApplicationListener<ContextRe
                 + "but not on a cluster. If you are in a cluster, this warning is going to be a problem.", CLUSTER_NAME);
             return;
         }
+
+        log.info("ia.config.validator.secret = {}", iaConfigValidatorSecret);
+        log.info("idam.s2s-auth.totp_secret = {}", s2sSecret);
 
         if (StringUtils.isBlank(iaConfigValidatorSecret)) {
             throw new IllegalArgumentException("ia.config.validator.secret is null or empty."
