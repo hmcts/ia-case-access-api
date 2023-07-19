@@ -1,8 +1,4 @@
 java:
-  keyVaults:
-    ia:
-      secrets:
-        - ia-config-validator-secret
   # Don't modify below here
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
