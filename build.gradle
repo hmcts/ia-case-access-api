@@ -182,8 +182,14 @@ dependencyManagement {
       entry 'snakeyaml'
     }
 
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.73') {
+      entry 'tomcat-embed-core'
+      entry 'tomcat-embed-el'
+      entry 'tomcat-embed-websocket'
+    }
+
     // CVE-2018-10237 - Unbounded memory allocation
-    dependencySet(group: 'com.google.guava', version: '31.1-jre') {
+    dependencySet(group: 'com.google.guava', version: '30.0-jre') {
       entry 'guava'
     }
 
@@ -191,28 +197,34 @@ dependencyManagement {
       entry 'commons-fileupload'
     }
 
-    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.15.0') {
+    dependencySet(group: 'org.springframework.security', version: '5.7.5') {
+      entry 'spring-security-crypto'
+      entry 'spring-security-core'
+      entry 'spring-security-config'
+      entry 'spring-security-web'
+      entry 'spring-security-test'
+      entry 'spring-security-oauth2-client'
+      entry 'spring-security-oauth2-core'
+      entry 'spring-security-oauth2-jose'
+      entry 'spring-security-oauth2-resource-server'
+    }
+
+    //CVE-2021-42550
+    dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
+      entry 'logback-classic'
+      entry 'logback-core'
+    }
+
+    //CVE-2021-44228, CVE-2021-44832, CVE-2021-45046
+    dependencySet(group: 'org.apache.logging.log4j', version: '2.17.1') {
+      entry 'log4j-api'
+      entry 'log4j-to-slf4j'
+    }
+
+    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.14.1') {
       entry 'jackson-databind'
       entry 'jackson-core'
-      entry 'jackson-annotations'
     }
-
-    dependencySet(group: 'com.fasterxml.jackson.dataformat', version: '2.15.0') {
-      entry 'jackson-dataformat-yaml'
-      entry 'jackson-dataformat-cbor'
-      entry 'jackson-dataformat-smile'
-    }
-
-    dependencySet(group: 'com.fasterxml.jackson.datatype', version: '2.15.0') {
-      entry 'jackson-datatype-jsr310'
-      entry 'jackson-datatype-jdk8'
-    }
-
-    dependencySet(group: 'com.fasterxml.jackson.module', version: '2.15.0') {
-      entry 'jackson-module-parameter-names'
-      entry 'jackson-module-afterburner'
-    }
-
   }
 }
 
@@ -226,6 +238,7 @@ def versions = [
   junit           : '5.6.2',
   junitPlatform   : '1.6.2',
   reformLogging   : '5.1.7',
+  springBoot      : '2.7.2',
   pact_version    : '3.5.24',
   serenity        : '2.2.12'
 ]
@@ -289,7 +302,7 @@ dependencies {
   }
 
   testImplementation libraries.junit5
-  testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
+  testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot, {
     exclude group: 'junit', module: 'junit'
     exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
   }
@@ -303,7 +316,7 @@ dependencies {
 
   testImplementation group: 'org.pitest', name: 'pitest', version: '1.5.2'
 
-  testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test') {
+  testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot) {
     exclude group: "com.vaadin.external.google", module: "android-json"
   }
 
