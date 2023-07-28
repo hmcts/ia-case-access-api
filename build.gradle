@@ -315,6 +315,7 @@ dependencies {
     exclude group: "com.vaadin.external.google", module: "android-json"
   }
 
+  testImplementation group: 'org.apache.groovy', name: 'groovy', version: '4.0.13'
   testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.27.2'
   testImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
   testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
