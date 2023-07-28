@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacaseaccessapi.testutils;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.matching.RequestPatternBuilder.newRequestPattern;
@@ -15,7 +16,8 @@ public interface WithIdamStub {
         server.addStubMapping(
             new StubMapping(
                 newRequestPattern(RequestMethod.POST, urlEqualTo("/idam/o/token"))
-                    .withHeader("Content-Type", equalTo("application/x-www-form-urlencoded; charset=UTF-8"))
+                    .withHeader("Content-Type", containing("application/x-www-form-urlencoded;"))
+                    .withHeader("Content-Type", containing("charset=UTF-8"))
                     .build(),
                 aResponse()
                     .withStatus(200)

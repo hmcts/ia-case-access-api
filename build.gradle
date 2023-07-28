@@ -13,7 +13,7 @@ plugins {
   id 'pmd'
   id 'jacoco'
   id 'io.spring.dependency-management' version '1.1.0'
-  id 'org.springframework.boot' version '2.7.11'
+  id 'org.springframework.boot' version '2.3.9.RELEASE'
   id 'uk.gov.hmcts.java' version '0.12.43'
   id 'org.owasp.dependencycheck' version '8.2.1'
   id 'com.github.ben-manes.versions' version '0.28.0'
@@ -186,11 +186,6 @@ dependencyCheck {
 
 dependencyManagement {
   dependencies {
-
-    dependencySet(group: 'org.yaml', version: '1.33') {
-      entry 'snakeyaml'
-    }
-
     dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.73') {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
@@ -206,17 +201,11 @@ dependencyManagement {
       entry 'commons-fileupload'
     }
 
-    dependencySet(group: 'org.springframework.security', version: '5.7.5') {
-      entry 'spring-security-crypto'
-      entry 'spring-security-core'
-      entry 'spring-security-config'
-      entry 'spring-security-web'
-      entry 'spring-security-test'
-      entry 'spring-security-oauth2-client'
-      entry 'spring-security-oauth2-core'
-      entry 'spring-security-oauth2-jose'
-      entry 'spring-security-oauth2-resource-server'
-    }
+    // CVE-2021-22060
+    dependency(group: 'org.springframework', name: 'spring-core', version: '5.3.15')
+
+    //CVE-2021-22119
+    dependency group: 'org.springframework.security', name: 'spring-security-core',  version: '5.6.1'
 
     //CVE-2021-42550
     dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
@@ -247,7 +236,7 @@ def versions = [
   junit           : '5.6.2',
   junitPlatform   : '1.6.2',
   reformLogging   : '5.1.7',
-  springBoot      : '2.7.2',
+  springBoot      : '2.6.3',
   pact_version    : '3.5.24',
   serenity        : '3.2.3'
 ]
@@ -272,16 +261,16 @@ configurations {
 }
 
 dependencies {
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
-  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: versions.springBoot
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: versions.springBoot
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server', version: versions.springBoot
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: versions.springBoot
 
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.1'
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '2.2.2.RELEASE'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
 
 
   // CVE-2019-17195
@@ -294,7 +283,7 @@ dependencies {
 
   implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
   implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
+  implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.2.RELEASE'
   implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
   implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: '3.1.2'
   implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '7.14.0'
@@ -306,9 +295,6 @@ dependencies {
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-  testImplementation(group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.1.6') {
-    exclude group: "com.github.tomakehurst", module: "wiremock-standalone"
-  }
 
   testImplementation libraries.junit5
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot, {
@@ -325,10 +311,11 @@ dependencies {
 
   testImplementation group: 'org.pitest', name: 'pitest', version: '1.5.2'
 
-  testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot) {
+  testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot) {
     exclude group: "com.vaadin.external.google", module: "android-json"
   }
 
+  testImplementation group: 'com.github.tomakehurst', name: 'wiremock', version: '2.27.2'
   testImplementation group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity
   testImplementation group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity
   testImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
