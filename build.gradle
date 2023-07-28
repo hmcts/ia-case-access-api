@@ -238,7 +238,7 @@ def versions = [
   reformLogging   : '5.1.7',
   springBoot      : '2.6.3',
   pact_version    : '3.5.24',
-  serenity        : '3.2.3'
+  serenity        : '3.9.7'
 ]
 
 ext.libraries = [
