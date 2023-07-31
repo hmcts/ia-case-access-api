@@ -138,7 +138,12 @@ public class CaseDataFixture {
         legalRepUserId = idamAuthProvider.getUserId(legalRepToken);
     }
 
-    private String triggerEvent(String userToken, String s2sToken, String userId, long caseId, String event, Map<String, Object> data) {
+    private String triggerEvent(String userToken,
+                                String s2sToken,
+                                String userId,
+                                long caseId,
+                                String event,
+                                Map<String, Object> data) {
 
         StartEventTrigger startEventResponse = ccdApi.startEvent(
             userToken,

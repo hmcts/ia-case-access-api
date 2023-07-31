@@ -2,7 +2,8 @@ package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

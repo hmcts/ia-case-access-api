@@ -26,7 +26,8 @@ public class DownStreamHealthIndicatorTest {
     public void testGetContributor() {
         when(healthCheckConfiguration.getServices()).thenReturn(getHealthCheckConfiguration());
 
-        DownStreamHealthIndicator downStreamHealthIndicator = new DownStreamHealthIndicator(restTemplate, healthCheckConfiguration);
+        DownStreamHealthIndicator downStreamHealthIndicator =
+            new DownStreamHealthIndicator(restTemplate, healthCheckConfiguration);
 
         assertNotNull(downStreamHealthIndicator.getContributor("service2"));
         assertEquals(ServiceHealthIndicator.class, downStreamHealthIndicator.getContributor("service2").getClass());

@@ -3,7 +3,8 @@ package uk.gov.hmcts.reform.iacaseaccessapi.testutils.clients;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.IdamApi;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.idam.UserInfo;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.FeignConfiguration;

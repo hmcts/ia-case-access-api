@@ -9,10 +9,15 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.MvcResult;
-import uk.gov.hmcts.reform.iacaseaccessapi.testutils.*;
+import uk.gov.hmcts.reform.iacaseaccessapi.testutils.IntegrationConstants;
+import uk.gov.hmcts.reform.iacaseaccessapi.testutils.SpringBootIntegrationTest;
+import uk.gov.hmcts.reform.iacaseaccessapi.testutils.WithCoreCaseApiStub;
+import uk.gov.hmcts.reform.iacaseaccessapi.testutils.WithIdamStub;
+import uk.gov.hmcts.reform.iacaseaccessapi.testutils.WithServiceAuthStub;
 
-
-public class SupplementaryDetailsResponseIntegrationTest extends SpringBootIntegrationTest implements WithServiceAuthStub, WithCoreCaseApiStub, WithIdamStub {
+public class SupplementaryDetailsResponseIntegrationTest
+    extends SpringBootIntegrationTest
+    implements WithServiceAuthStub, WithCoreCaseApiStub, WithIdamStub {
 
     @org.springframework.beans.factory.annotation.Value("classpath:ccd-search-result-response.json")
     private Resource resourceFile;
@@ -58,9 +63,10 @@ public class SupplementaryDetailsResponseIntegrationTest extends SpringBootInteg
                                            + "\"missing_supplementary_info\":"
                                            + "{\"ccd_case_numbers\":[\"22222222222222\",\"99999999999999\"]}}";
 
-    private final String emptyResponse = "{\"supplementary_info\":[],"
-                                         + "\"missing_supplementary_info\":"
-                                         + "{\"ccd_case_numbers\":[\"1619513189387090\",\"22222222222222\",\"99999999999999\"]}}";
+    private final String emptyResponse =
+        "{\"supplementary_info\":[],"
+            + "\"missing_supplementary_info\":"
+            + "{\"ccd_case_numbers\":[\"1619513189387090\",\"22222222222222\",\"99999999999999\"]}}";
 
     private final String emptySurnameResponse = "{\"supplementary_info\":["
                                                 + "{\"ccd_case_number\":\"1619513189387099\","

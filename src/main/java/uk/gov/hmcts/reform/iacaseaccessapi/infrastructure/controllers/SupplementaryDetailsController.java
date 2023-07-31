@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.controllers;
 
-import static org.springframework.http.ResponseEntity.*;
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.status;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -8,8 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import java.util.*;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,31 +47,32 @@ public class SupplementaryDetailsController {
             responseCode  = "200",
             description = "Supplementary details completely retrieved.",
             content =  @Content(schema = @Schema(implementation = String.class))
-        ),
+            ),
         @ApiResponse(
             responseCode = "206",
             description = "Supplementary details partially retrieved.",
             content =  @Content(schema = @Schema(implementation = String.class))
-        ),
+            ),
         @ApiResponse(
             responseCode = "401",
             description = "Unauthorized - missing or invalid S2S token."
-        ),
+            ),
         @ApiResponse(
             responseCode = "403",
             description = "Forbidden - system user does not have access to the resources."
-        ),
+            ),
         @ApiResponse(
             responseCode = "404",
             description = "Supplementary details not found for all the case numbers given."
-        ),
+            ),
         @ApiResponse(
             responseCode = "500",
             description = "Unexpected or Run time exception."
-        )
+            )
     })
     @PostMapping(path = "/supplementary-details")
-    public ResponseEntity<SupplementaryDetailsResponse> post(@RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
+    public ResponseEntity<SupplementaryDetailsResponse> post(
+        @RequestBody SupplementaryDetailsRequest supplementaryDetailsRequest) {
 
         if (supplementaryDetailsRequest == null
             || supplementaryDetailsRequest.getCcdCaseNumbers() == null) {
@@ -134,7 +136,9 @@ public class SupplementaryDetailsController {
         }
     }
 
-    private MissingSupplementaryInfo missingSupplementaryDetailsInfo(List<String> ccdCaseNumberList, List<SupplementaryInfo> supplementaryInfo) {
+    private MissingSupplementaryInfo missingSupplementaryDetailsInfo(
+        List<String> ccdCaseNumberList,
+        List<SupplementaryInfo> supplementaryInfo) {
 
         List<String> ccdCaseNumbersFound = supplementaryInfo
             .stream()

@@ -4,7 +4,11 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.ServiceTokenGeneratorConfiguration.SERVICE_AUTHORIZATION;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.CcdApi;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.ccd.CaseDataContent;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.ccd.CaseDetails;
@@ -18,7 +22,11 @@ import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.config.FeignConfigurat
 )
 public interface ExtendedCcdApi extends CcdApi {
 
-    @GetMapping(value = "/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/event-triggers/{etid}/token?ignore-warning=true", produces = "application/json", consumes = "application/json")
+    @GetMapping(
+        value =
+            "/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/event-triggers/{etid}/token?ignore-warning=true",
+        produces = "application/json",
+        consumes = "application/json")
     StartEventTrigger startCaseCreation(
         @RequestHeader(AUTHORIZATION) String userToken,
         @RequestHeader(SERVICE_AUTHORIZATION) String s2sToken,
@@ -28,7 +36,9 @@ public interface ExtendedCcdApi extends CcdApi {
         @PathVariable("etid") String eventId
     );
 
-    @PostMapping(value = "/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/cases", produces = "application/json", consumes = "application/json")
+    @PostMapping(value = "/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/cases",
+        produces = "application/json",
+        consumes = "application/json")
     CaseDetails submitCaseCreation(
         @RequestHeader(AUTHORIZATION) String userToken,
         @RequestHeader(SERVICE_AUTHORIZATION) String s2sToken,
@@ -38,7 +48,9 @@ public interface ExtendedCcdApi extends CcdApi {
         @RequestBody CaseDataContent content
     );
 
-    @GetMapping(value = "/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/cases/{cid}", produces = "application/json", consumes = "application/json")
+    @GetMapping(value = "/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/cases/{cid}",
+        produces = "application/json",
+        consumes = "application/json")
     CaseDetails get(
         @RequestHeader(AUTHORIZATION) String userToken,
         @RequestHeader(SERVICE_AUTHORIZATION) String s2sToken,

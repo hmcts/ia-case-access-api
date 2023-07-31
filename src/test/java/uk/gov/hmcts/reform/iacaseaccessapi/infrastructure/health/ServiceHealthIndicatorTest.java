@@ -67,7 +67,8 @@ public class ServiceHealthIndicatorTest {
     public void health_should_throw_exception_rest_error() {
         when(restTemplate.getForEntity(uri, String.class)).thenThrow(new RestClientException("Internal server error"));
 
-        assertEquals(Health.down(new RestClientException("Internal server error")).build(), serviceHealthIndicator.health());
+        assertEquals(
+            Health.down(new RestClientException("Internal server error")).build(), serviceHealthIndicator.health());
     }
 
     @Test

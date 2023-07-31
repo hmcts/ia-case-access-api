@@ -41,7 +41,8 @@ public class SmokeTest {
             case 503:
                 throw new RestClientException(
                     response.getBody().asString(),
-                    new HttpClientErrorException(HttpStatus.valueOf(response.getStatusCode()), "One or more downstream services are unavailable."));
+                    new HttpClientErrorException(HttpStatus.valueOf(response.getStatusCode()),
+                                                 "One or more downstream services are unavailable."));
             default:
                 throw new IllegalStateException("Issue with downstream services");
         }

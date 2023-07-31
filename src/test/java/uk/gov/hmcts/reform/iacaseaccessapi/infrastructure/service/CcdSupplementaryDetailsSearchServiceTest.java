@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.HashMap;
