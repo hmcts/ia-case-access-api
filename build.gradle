@@ -228,40 +228,6 @@ dependencyCheck {
   suppressionFile = 'config/owasp/suppressions.xml'
 }
 
-dependencyManagement {
-  dependencies {
-
-    dependencySet(group: 'org.yaml', version: '2.0') {
-      entry 'snakeyaml'
-    }
-
-    dependencySet(group: 'com.google.guava', version: '32.1.2-jre') {
-      entry 'guava'
-    }
-
-    dependencySet(group: 'commons-fileupload', version: '1.5') {
-      entry 'commons-fileupload'
-    }
-
-    //CVE-2021-42550
-    dependencySet(group: 'ch.qos.logback', version: '1.2.10') {
-      entry 'logback-classic'
-      entry 'logback-core'
-    }
-
-    //CVE-2021-44228, CVE-2021-44832, CVE-2021-45046
-    dependencySet(group: 'org.apache.logging.log4j', version: '2.17.1') {
-      entry 'log4j-api'
-      entry 'log4j-to-slf4j'
-    }
-
-    dependencySet(group: 'com.fasterxml.jackson.core', version: '2.15.2') {
-      entry 'jackson-databind'
-      entry 'jackson-core'
-    }
-  }
-}
-
 repositories {
   mavenLocal()
   jcenter()
@@ -291,6 +257,16 @@ dependencies {
 
   implementation group: 'org.yaml', name: 'snakeyaml', version: '2.0'
 
+  implementation group: 'com.google.guava', name: 'guava', version: '32.1.2-jre'
+
+  implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
+
+  implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+  implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
+
+  implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.1'
+  implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.17.1'
+
   implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.14'
 
   implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
@@ -303,6 +279,7 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
 
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.2'
 
   implementation group: 'net.minidev', name: 'json-smart', version: '2.3.1'
 
