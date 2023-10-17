@@ -278,7 +278,7 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: '2.2.10.RELEASE'
 
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.2'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.15.3'
 
   implementation group: 'net.minidev', name: 'json-smart', version: '2.3.1'
 
