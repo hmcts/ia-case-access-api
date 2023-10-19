@@ -294,7 +294,7 @@ dependencies {
 
   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.81'
+  implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.82'
   implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '9.0.81'
 
   testImplementation group: 'uk.gov.hmcts.reform', name: 'document-management-client', version: '7.0.0'
