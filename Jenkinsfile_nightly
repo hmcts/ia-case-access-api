@@ -91,7 +91,7 @@ withNightlyPipeline(type, product, component) {
           keepAll              : true,
           reportDir            : "build/reports/tests/test",
           reportFiles          : "index.html",
-          reportName           : "IAC Case Access Unit Test Report"
+          reportName           : "Unit Test Report"
         ]
         publishHTML target: [
           allowMissing         : true,
@@ -99,7 +99,7 @@ withNightlyPipeline(type, product, component) {
           keepAll              : true,
           reportDir            : "build/reports/tests/smoke",
           reportFiles          : "index.html",
-          reportName           : "IAC Case Access Smoke Test Report"
+          reportName           : "Smoke Test Report"
         ]
         publishHTML target: [
           allowMissing         : true,
@@ -107,7 +107,7 @@ withNightlyPipeline(type, product, component) {
           keepAll              : true,
           reportDir            : "build/reports/tests/integration",
           reportFiles          : "index.html",
-          reportName           : "IAC Case Access Integration Test Report"
+          reportName           : "Integration Test Report"
         ]
       }
     }
@@ -119,7 +119,7 @@ withNightlyPipeline(type, product, component) {
         keepAll              : true,
         reportDir            : "build/reports/tests/functional",
         reportFiles          : 'index.html',
-        reportName           : 'IAC Case Access Functional Test Report'
+        reportName           : 'Functional Test Report'
       ])
 
       steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
