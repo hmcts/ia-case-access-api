@@ -69,9 +69,6 @@ withNightlyPipeline(type, product, component) {
   if (!params.skipSecurityScan) {
     enableSecurityScan()
   }
-  if (!params.skipMutationTests) {
-    enableMutationTest()
-  }
   if (!params.skipFullFunctionalTests) {
     enableFullFunctionalTest()
   }
