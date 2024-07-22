@@ -10,8 +10,8 @@ import io.restassured.response.Response;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -34,7 +34,7 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
     private List<String> ccdCaseNumbers;
     private String cases;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         createCase();
         ccdCaseNumbers.clear();
@@ -182,7 +182,6 @@ public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
     }
 
     private Response supplementaryDetails(String cases, String serviceToken) {
-
         return given(requestSpecification)
             .when()
             .header(new Header("Authorization", caseDataFixture.getLegalRepToken()))

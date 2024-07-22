@@ -5,7 +5,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,7 +64,7 @@ public class FunctionalTest {
 
     protected MapValueExpander mapValueExpander;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException {
         requestSpecification = new RequestSpecBuilder()
             .setBaseUri(targetInstance)

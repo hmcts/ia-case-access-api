@@ -48,15 +48,10 @@ public class IdamSystemTokenGenerator implements SystemTokenGenerator {
         map.add("username", systemUserName);
         map.add("password", systemUserPass);
         map.add("scope", systemUserScope);
-
         try {
-
             var tokenResponse = idamApi.token(map);
-
             return tokenResponse.getAccessToken();
-
         } catch (FeignException ex) {
-
             throw new IdentityManagerResponseException("Could not get system user token from IDAM", ex);
         }
     }
