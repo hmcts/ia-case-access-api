@@ -20,6 +20,8 @@ spring:
     name: IA Case Access API
   main:
     allow-bean-definition-overriding: true
+  config:
+    import: "optional:configtree:/mnt/secrets/ia/"
   jackson.date-format: yyyy-MM-dd
 
 health:
