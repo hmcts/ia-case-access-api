@@ -15,4 +15,5 @@ import lombok.NoArgsConstructor;
 public class SupplementaryDetails {
 
     private String surname;
+    private String caseReferenceNumber;
 }

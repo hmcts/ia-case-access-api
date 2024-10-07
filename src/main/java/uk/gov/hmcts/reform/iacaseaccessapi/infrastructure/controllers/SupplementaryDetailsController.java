@@ -101,7 +101,7 @@ public class SupplementaryDetailsController {
         }
 
         log.info("Request ccdNumberList:"
-                 + ccdCaseNumberList.stream().collect(Collectors.joining(",")));
+                 + String.join(",", ccdCaseNumberList));
 
         try {
 
@@ -143,7 +143,7 @@ public class SupplementaryDetailsController {
         List<String> ccdCaseNumbersFound = supplementaryInfo
             .stream()
             .map(SupplementaryInfo::getCcdCaseNumber)
-            .collect(Collectors.toList());
+            .toList();
 
         List<String> ccdCaseNumbersMissing = ccdCaseNumberList
             .stream()

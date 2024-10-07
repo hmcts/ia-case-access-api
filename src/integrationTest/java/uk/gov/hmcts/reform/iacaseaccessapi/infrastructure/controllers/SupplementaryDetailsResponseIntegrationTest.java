@@ -55,11 +55,11 @@ public class SupplementaryDetailsResponseIntegrationTest
 
     private final String fullResponse = "{\"supplementary_info\":["
                                         + "{\"ccd_case_number\":\"1619513189387098\","
-                                        + "\"supplementary_details\":{\"surname\":\"Johnson\"}}]}";
+                                        + "\"supplementary_details\":{\"surname\":\"Johnson\",\"case_reference_number\":\"PA/12345/2024\"}}]}";
 
     private final String partialResponse = "{\"supplementary_info\":["
                                            + "{\"ccd_case_number\":\"1619513189387098\","
-                                           + "\"supplementary_details\":{\"surname\":\"Johnson\"}}],"
+                                           + "\"supplementary_details\":{\"surname\":\"Johnson\",\"case_reference_number\":\"PA/12345/2024\"}}],"
                                            + "\"missing_supplementary_info\":"
                                            + "{\"ccd_case_numbers\":[\"22222222222222\",\"99999999999999\"]}}";
 
@@ -70,11 +70,11 @@ public class SupplementaryDetailsResponseIntegrationTest
 
     private final String emptySurnameResponse = "{\"supplementary_info\":["
                                                 + "{\"ccd_case_number\":\"1619513189387099\","
-                                                + "\"supplementary_details\":{\"surname\":\"\"}}]}";
+                                                + "\"supplementary_details\":{\"surname\":\"\",\"case_reference_number\":\"\"}}]}";
 
     private final String missingSurnameResponse = "{\"supplementary_info\":["
                                                   + "{\"ccd_case_number\":\"1619513189387099\","
-                                                  + "\"supplementary_details\":{\"surname\":\"null\"}}]}";
+                                                  + "\"supplementary_details\":{\"surname\":\"null\",\"case_reference_number\":\"null\"}}]}";
 
     void setup(WireMockServer server) {
         addUserInfoStub(server);

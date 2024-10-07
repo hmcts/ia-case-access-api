@@ -12,6 +12,7 @@
       "last_state_modified_date": "2021-04-27T08:55:18.528",
       "security_classification": "PUBLIC",
       "case_data": {
+        "appealReferenceNumber": "PA/12345/2024",
         "appellantGivenNames": "José",
         "appellantFamilyName": "Johnson"
         }

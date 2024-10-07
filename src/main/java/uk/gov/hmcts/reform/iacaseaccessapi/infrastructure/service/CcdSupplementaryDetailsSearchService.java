@@ -32,6 +32,7 @@ import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.security.oauth2.Identi
 public class CcdSupplementaryDetailsSearchService implements SupplementaryDetailsService {
     private static final String CASE_TYPE_ID = "Asylum";
     private static final String APPELLANT_FAMILY_NAME = "appellantFamilyName";
+    private static final String APPEAL_REFERENCE_NUMBER = "appealReferenceNumber";
     private final CoreCaseDataApi coreCaseDataApi;
     private final SystemTokenGenerator systemTokenGenerator;
     private final AuthTokenGenerator s2sAuthTokenGenerator;
@@ -131,9 +132,21 @@ public class CcdSupplementaryDetailsSearchService implements SupplementaryDetail
     }
 
     private SupplementaryInfo extractSupplementaryInfo(CaseDetails caseDetails) {
+        // TODO: remove logs after testing
+        log.info("Case Data retrieved for caseId {} - surname: {}, caseReferenceNumber: {}",
+                 caseDetails.getId(), caseDetails.getCaseData().get(APPELLANT_FAMILY_NAME),
+                 caseDetails.getCaseData().get(APPEAL_REFERENCE_NUMBER));
+
+        SupplementaryDetails supplementaryDetails = new SupplementaryDetails(
+            String.valueOf(caseDetails.getCaseData().get(APPELLANT_FAMILY_NAME)),
+            String.valueOf(caseDetails.getCaseData().get(APPEAL_REFERENCE_NUMBER))
+        );
+
+        log.info("Supplementary details for caseId {} - surname: {}, caseReferenceNumber: {}",
+                 caseDetails.getId(), supplementaryDetails.getSurname(), supplementaryDetails.getCaseReferenceNumber());
         return new SupplementaryInfo(
             String.valueOf(caseDetails.getId()),
-            new SupplementaryDetails(String.valueOf(caseDetails.getCaseData().get(APPELLANT_FAMILY_NAME)))
+            supplementaryDetails
         );
     }
 

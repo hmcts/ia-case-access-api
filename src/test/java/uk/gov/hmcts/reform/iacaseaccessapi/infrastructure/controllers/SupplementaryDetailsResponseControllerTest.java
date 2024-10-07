@@ -46,7 +46,7 @@ class SupplementaryDetailsResponseControllerTest {
 
         List<SupplementaryInfo> supplementaryInfo = new ArrayList<>();
 
-        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson");
+        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson", "EU/12345/2024");
 
         ccdCaseNumberList.forEach((ccdCaseNumber) -> {
             SupplementaryInfo supplementaryInformation = new SupplementaryInfo(ccdCaseNumber, supplementaryDetails);
@@ -83,7 +83,7 @@ class SupplementaryDetailsResponseControllerTest {
 
         List<SupplementaryInfo> supplementaryInfo = new ArrayList<>();
 
-        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson");
+        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson", "EU/12345/2024");
 
         ccdCaseNumberList.stream().distinct().forEach((ccdCaseNumber) -> {
             SupplementaryInfo supplementaryInformation = new SupplementaryInfo(ccdCaseNumber, supplementaryDetails);
@@ -121,7 +121,7 @@ class SupplementaryDetailsResponseControllerTest {
 
         List<SupplementaryInfo> supplementaryInfo = new ArrayList<>();
 
-        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson");
+        SupplementaryDetails supplementaryDetails = new SupplementaryDetails("Johnson", "EU/12345/2024");
 
         SupplementaryInfo supplementaryInformation = new SupplementaryInfo("11111111111111", supplementaryDetails);
         supplementaryInfo.add(supplementaryInformation);
