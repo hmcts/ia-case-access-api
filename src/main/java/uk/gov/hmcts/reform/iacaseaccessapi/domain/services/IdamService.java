@@ -23,9 +23,9 @@ public class IdamService {
         @Value("${idam.system.username}") String systemUserName,
         @Value("${idam.system.password}") String systemUserPass,
         @Value("${idam.redirectUrl}") String idamRedirectUrl,
-        @Value("${idam.scope}") String systemUserScope,
-        @Value("${spring.security.oauth2.client.registration.oidc.client-id}") String idamClientId,
-        @Value("${spring.security.oauth2.client.registration.oidc.client-secret}") String idamClientSecret,
+        @Value("${idam.system.scope}") String systemUserScope,
+        @Value("${idam.system.client-id}") String idamClientId,
+        @Value("${idam.system.client-secret}") String idamClientSecret,
         IdamApi idamApi
     ) {
         this.systemUserName = systemUserName;
