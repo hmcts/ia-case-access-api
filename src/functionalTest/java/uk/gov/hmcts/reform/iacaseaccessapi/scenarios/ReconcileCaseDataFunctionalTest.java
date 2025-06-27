@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.FunctionalTest;
 import uk.gov.hmcts.reform.iacaseaccessapi.testutils.data.CaseDataFixture;
@@ -21,6 +22,7 @@ import uk.gov.hmcts.reform.iacaseaccessapi.testutils.data.CaseDataFixture;
 @RunWith(SpringIntegrationSerenityRunner.class)
 @SpringBootTest
 @ActiveProfiles("functional")
+@DirtiesContext
 public class ReconcileCaseDataFunctionalTest extends FunctionalTest {
 
     private String jurisdiction = "IA";
