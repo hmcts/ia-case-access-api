@@ -7,4 +7,4 @@ spring:
   cache:
     cache-names: legalRepTokenCache, systemTokenCache
     caffeine:
-      spec: expireAfterAccess=3600s
+      spec: expireAfterWrite=3600s
