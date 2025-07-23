@@ -26,8 +26,8 @@ apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
 apply plugin: 'project-report'
 
 def versions = [
-  jupiter            : '5.13.3',
-  junitPlatform      : '1.13.3',
+  jupiter            : '5.13.4',
+  junitPlatform      : '1.13.4',
   pitest             : '1.15.3',
   gradlePitest       : '1.15.0',
   reformLogging      : '6.1.9',
@@ -267,8 +267,8 @@ dependencies {
   implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
   implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
 
-  implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.25.0'
-  implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.25.0'
+  implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.25.1'
+  implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.25.1'
 
   implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.48'
 
@@ -288,9 +288,9 @@ dependencies {
     exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
   }
   implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.81'
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.19.1'
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.19.1'
-  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.19.1'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.19.2'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.19.2'
+  implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.19.2'
 
   implementation group: 'net.minidev', name: 'json-smart', version: '2.5.2'
 
@@ -302,12 +302,12 @@ dependencies {
 
   implementation 'org.apiguardian:apiguardian-api:1.1.2'
 
-  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
+  implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
 
   implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.13'
   implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
 
-  implementation group: 'commons-io', name: 'commons-io', version: '2.19.0'
+  implementation group: 'commons-io', name: 'commons-io', version: '2.20.0'
 
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
 
