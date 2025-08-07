@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.iacaseaccessapi.testutils.data;
 
 import feign.FeignException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import uk.gov.hmcts.reform.iacaseaccessapi.infrastructure.clients.model.idam.Token;
@@ -30,6 +31,7 @@ public class IdamAuthProvider {
         this.idamClientSecret = idamClientSecret;
     }
 
+    @Cacheable(value = "legalRepTokenCache")
     public String getLegalRepToken() {
         return getUserToken(
             System.getenv("TEST_LAW_FIRM_SHARE_CASE_A_USERNAME"),

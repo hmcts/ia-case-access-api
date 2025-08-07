@@ -43,10 +43,15 @@ withPipeline(type, product, component) {
     env.DM_URL = "http://dm-store-aat.service.core-compute-aat.internal"
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
     env.CCD_GW_URL = "http://dm-store-aat.service.core-compute-aat.internal"
+    env.TEST_URL = "http://ia-case-access-api-aat.service.core-compute-aat.internal"
 
     enableAksStagingDeployment()
     disableLegacyDeployment()
     loadVaultSecrets(secrets)
+
+    before('functionalTest:preview') {
+      env.TEST_URL = "https://ia-case-access-api-pr-${CHANGE_ID}.preview.platform.hmcts.net"
+    }
 
     afterSuccess('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'

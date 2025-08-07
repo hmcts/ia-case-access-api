@@ -23,6 +23,10 @@ spring:
   config:
     import: "optional:configtree:/mnt/secrets/ia/"
   jackson.date-format: yyyy-MM-dd
+  cache:
+    cache-names: systemTokenCache
+    caffeine:
+      spec: expireAfterAccess=3600s
 
 health:
   probes:
