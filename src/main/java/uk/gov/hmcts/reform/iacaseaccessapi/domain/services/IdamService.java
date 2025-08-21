@@ -52,3 +52,4 @@ public class IdamService {
         return idamApi.token(idamAuthDetails);
     }
 }
+
