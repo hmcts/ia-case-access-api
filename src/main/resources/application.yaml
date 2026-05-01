@@ -68,7 +68,7 @@ idam:
   system:
     username: ${IA_SYSTEM_ACCESS_USERNAME:}
     password: ${IA_SYSTEM_ACCESS_PASSWORD:}
-    scope: "openid profile roles"
+    scope: "openid profile authorities acr roles create-user manage-user search-user"
     client-id: ${IA_IDAM_CLIENT_ID:ia}
     client-secret: ${IA_IDAM_SECRET:something}
   s2s-auth:
